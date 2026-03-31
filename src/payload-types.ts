@@ -69,6 +69,18 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    country: Country;
+    address: Address;
+    employee: Employee;
+    enterprise: Enterprise;
+    'enterprise-employee': EnterpriseEmployee;
+    subscription: Subscription;
+    'text-theme': TextTheme;
+    'text-system': TextSystem;
+    'text-type': TextType;
+    jort: Jort;
+    text: Text;
+    'text-help-request': TextHelpRequest;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,13 +90,25 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    country: CountrySelect<false> | CountrySelect<true>;
+    address: AddressSelect<false> | AddressSelect<true>;
+    employee: EmployeeSelect<false> | EmployeeSelect<true>;
+    enterprise: EnterpriseSelect<false> | EnterpriseSelect<true>;
+    'enterprise-employee': EnterpriseEmployeeSelect<false> | EnterpriseEmployeeSelect<true>;
+    subscription: SubscriptionSelect<false> | SubscriptionSelect<true>;
+    'text-theme': TextThemeSelect<false> | TextThemeSelect<true>;
+    'text-system': TextSystemSelect<false> | TextSystemSelect<true>;
+    'text-type': TextTypeSelect<false> | TextTypeSelect<true>;
+    jort: JortSelect<false> | JortSelect<true>;
+    text: TextSelect<false> | TextSelect<true>;
+    'text-help-request': TextHelpRequestSelect<false> | TextHelpRequestSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
   globals: {};
@@ -122,7 +146,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -147,7 +171,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -163,10 +187,182 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "country".
+ */
+export interface Country {
+  id: number;
+  alpha2Code: string;
+  alpha3Code: string;
+  englishName?: string | null;
+  addresses?: (number | Address)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "address".
+ */
+export interface Address {
+  id: number;
+  address: string;
+  address2?: string | null;
+  region: string;
+  zipcode: string;
+  country?: (number | null) | Country;
+  enterprises?: (number | Enterprise)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enterprise".
+ */
+export interface Enterprise {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  website?: string | null;
+  taxIdentificationNumber: string;
+  address: number | Address;
+  employees?: (number | EnterpriseEmployee)[] | null;
+  subscriptions?: (number | Subscription)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enterprise-employee".
+ */
+export interface EnterpriseEmployee {
+  id: number;
+  employee: number | Employee;
+  enterprise: number | Enterprise;
+  responsible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "employee".
+ */
+export interface Employee {
+  id: number;
+  phone: string;
+  user: number | User;
+  enterprises?: (number | EnterpriseEmployee)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscription".
+ */
+export interface Subscription {
+  id: number;
+  enterprise: number | Enterprise;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-theme".
+ */
+export interface TextTheme {
+  id: number;
+  label: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-system".
+ */
+export interface TextSystem {
+  id: number;
+  label: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-type".
+ */
+export interface TextType {
+  id: number;
+  label: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jort".
+ */
+export interface Jort {
+  id: number;
+  publishDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text".
+ */
+export interface Text {
+  id: number;
+  /**
+   * UUID of the text (stable across versions)
+   */
+  textId: string;
+  /**
+   * Version number
+   */
+  version: number;
+  /**
+   * Whether this is the latest version
+   */
+  isLatest?: boolean | null;
+  title: string;
+  resume?: string | null;
+  effectiveDate?: string | null;
+  upload?: (number | null) | Media;
+  theme: number | TextTheme;
+  system: number | TextSystem;
+  type: number | TextType;
+  jort?: (number | null) | Jort;
+  keywords?: string | null;
+  /**
+   * References another text (version) that this text modifies
+   */
+  consequenceLaw?: (number | null) | Text;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-help-request".
+ */
+export interface TextHelpRequest {
+  id: number;
+  text: number | Text;
+  enterprise: number | Enterprise;
+  request: string;
+  requestUser: number | User;
+  answer?: string | null;
+  answerUser?: (number | null) | User;
+  assignUser?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +379,68 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'country';
+        value: number | Country;
+      } | null)
+    | ({
+        relationTo: 'address';
+        value: number | Address;
+      } | null)
+    | ({
+        relationTo: 'employee';
+        value: number | Employee;
+      } | null)
+    | ({
+        relationTo: 'enterprise';
+        value: number | Enterprise;
+      } | null)
+    | ({
+        relationTo: 'enterprise-employee';
+        value: number | EnterpriseEmployee;
+      } | null)
+    | ({
+        relationTo: 'subscription';
+        value: number | Subscription;
+      } | null)
+    | ({
+        relationTo: 'text-theme';
+        value: number | TextTheme;
+      } | null)
+    | ({
+        relationTo: 'text-system';
+        value: number | TextSystem;
+      } | null)
+    | ({
+        relationTo: 'text-type';
+        value: number | TextType;
+      } | null)
+    | ({
+        relationTo: 'jort';
+        value: number | Jort;
+      } | null)
+    | ({
+        relationTo: 'text';
+        value: number | Text;
+      } | null)
+    | ({
+        relationTo: 'text-help-request';
+        value: number | TextHelpRequest;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +450,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +473,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -274,6 +518,155 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "country_select".
+ */
+export interface CountrySelect<T extends boolean = true> {
+  id?: T;
+  alpha2Code?: T;
+  alpha3Code?: T;
+  englishName?: T;
+  addresses?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "address_select".
+ */
+export interface AddressSelect<T extends boolean = true> {
+  address?: T;
+  address2?: T;
+  region?: T;
+  zipcode?: T;
+  country?: T;
+  enterprises?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "employee_select".
+ */
+export interface EmployeeSelect<T extends boolean = true> {
+  phone?: T;
+  user?: T;
+  enterprises?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enterprise_select".
+ */
+export interface EnterpriseSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  website?: T;
+  taxIdentificationNumber?: T;
+  address?: T;
+  employees?: T;
+  subscriptions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enterprise-employee_select".
+ */
+export interface EnterpriseEmployeeSelect<T extends boolean = true> {
+  employee?: T;
+  enterprise?: T;
+  responsible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscription_select".
+ */
+export interface SubscriptionSelect<T extends boolean = true> {
+  enterprise?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-theme_select".
+ */
+export interface TextThemeSelect<T extends boolean = true> {
+  label?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-system_select".
+ */
+export interface TextSystemSelect<T extends boolean = true> {
+  label?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-type_select".
+ */
+export interface TextTypeSelect<T extends boolean = true> {
+  label?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jort_select".
+ */
+export interface JortSelect<T extends boolean = true> {
+  publishDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text_select".
+ */
+export interface TextSelect<T extends boolean = true> {
+  textId?: T;
+  version?: T;
+  isLatest?: T;
+  title?: T;
+  resume?: T;
+  effectiveDate?: T;
+  upload?: T;
+  theme?: T;
+  system?: T;
+  type?: T;
+  jort?: T;
+  keywords?: T;
+  consequenceLaw?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "text-help-request_select".
+ */
+export interface TextHelpRequestSelect<T extends boolean = true> {
+  text?: T;
+  enterprise?: T;
+  request?: T;
+  requestUser?: T;
+  answer?: T;
+  answerUser?: T;
+  assignUser?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
