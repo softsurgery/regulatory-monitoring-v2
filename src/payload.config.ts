@@ -14,12 +14,12 @@ import { EnterpriseEmployee } from './collections/definitions/enterprise/enterpr
 import { Subscription } from './collections/definitions/enterprise/subscription.collection'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { TextTheme } from './collections/text/text-theme.collection'
-import { TextSystem } from './collections/text/text-system.collection'
-import { TextType } from './collections/text/text-type.collection'
-import { Jort } from './collections/text/jort.collection'
-import { TextHelpRequest } from './collections/text/text-help-request.collection'
-import { Text } from './collections/text/text.collection'
+import { TextTheme } from './collections/definitions/text/text-theme.collection'
+import { TextSystem } from './collections/definitions/text/text-system.collection'
+import { TextType } from './collections/definitions/text/text-type.collection'
+import { Jort } from './collections/definitions/text/jort.collection'
+import { TextHelpRequest } from './collections/definitions/text/text-help-request.collection'
+import { Text } from './collections/definitions/text/text.collection'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
